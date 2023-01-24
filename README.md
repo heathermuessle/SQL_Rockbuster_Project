@@ -1,1 +1,2 @@
 # SQL_Rockbuster_Project
+Using SQL queries to gather and analyze fabricated data about a fictional movie rental chain, Rockbuster. The purpose of the analysis was to see which movies generated the most revenue for the company and to gather information about the customers who create the most business for Rockbuster, with the end goal of developing a streaming service that could be competitive with Netflix, Hulu, etc. Visualizations and a final presentation can be found here: https://public.tableau.com/app/profile/heather4386/viz/unit3project/customers
