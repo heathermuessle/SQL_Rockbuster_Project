@@ -1,0 +1,27 @@
+#looking up the categories already present in the database
+SELECT name, category_id
+FROM category
+
+#adding new categories to the existing ones
+INSERT INTO category (category_id, name)
+VALUES(17, 'Thriller');
+INSERT INTO category (category_id, name)
+VALUES(18, 'Crime');
+INSERT INTO category (category_id, name)
+VALUES(19, 'Mystery');
+INSERT INTO category (category_id, name)
+VALUES(20, 'Romance');
+INSERT INTO category (category_id, name)
+VALUES(21, 'War')
+
+#Updating the genre of an existing movie
+#first we look up what its current genre is
+SELECT * 
+FROM film
+WHERE title = 'African Egg'
+#the film id is 5
+#this is how we change the category ID to the new one
+UPDATE film_category
+SET category_id = 17
+WHERE film_id = 5
+
