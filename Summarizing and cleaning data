@@ -1,0 +1,46 @@
+SELECT title,
+       description,
+       count(*)
+FROM film
+GROUP BY title,
+         description
+HAVING COUNT(*) > 1
+
+#This tells us there are no duplicates. If there were, we’d delete them or create a view and not include the duplicates in it. 
+
+SELECT release_year,
+	   rental_rate,
+	   length,
+	   replacement_cost,
+	   rating
+FROM film
+WHERE release_year IS NULL
+OR rental_rate IS NULL
+OR length IS NULL
+OR replacement_cost IS NULL
+OR rating IS NULL
+
+#An example of checking for null values. Not ran for every column in the dataframe, only those most likely to have missing values. 
+
+SELECT MIN(rental_duration) AS min_rental_duration,
+       MAX(rental_duration) AS max_rental_duration,
+       AVG(rental_duration) AS avg_rental_duration,
+       COUNT(rental_duration) AS count_duration_values,
+       COUNT(*) AS count_rows
+FROM film
+
+#Gathering descriptive statistics for a given column
+
+SELECT mode() WITHIN GROUP (ORDER BY language_id)
+CASE
+WHEN language_id = 1 THEN 'English'
+WHEN language_id = 2 THEN 'Italian’
+WHEN language_id = 3 THEN 'Japanese'
+WHEN language_id = 4 THEN 'Mandarin'
+WHEN language_id = 5 THEN 'French’
+WHEN language_id = 6 THEN 'German'
+ELSE 'Langauge uknown'
+END AS modal_value
+FROM film
+
+#Lets us find the mode of a given column with text inputs, but in a way that's more intuitive.
