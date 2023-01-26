@@ -1,0 +1,33 @@
+#Using subqueries to find how many of the top customers are located in each country
+SELECT D.country,
+	  COUNT(A.customer_id) AS all_customer_count,
+   	COUNT(DISTINCT top_five_customers) AS top_customer_count,
+	  city,
+	  country,
+       	  SUM(amount)
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_ID = D.country_ID
+LEFT JOIN	(SELECT B.customer_id,
+    city,
+    country
+      SUM(amount)
+	  FROM customer A
+	  INNER JOIN address B ON A.address_id = B.address_id
+	  INNER JOIN city C ON B.city_id = C.city_id
+	  INNER JOIN country D ON C.country_ID = D.country_ID
+  	WHERE country IN (SELECT D.country
+		  FROM customer A
+		  INNER JOIN address B ON A.address_id = B.address_id
+		  INNER JOIN city C ON B.city_id = C.city_id
+		  INNER JOIN country D ON C.country_ID = D.country_ID
+		  GROUP BY country
+		  ORDER BY COUNT(customer_id) DESC
+		  LIMIT 10)
+	GROUP BY city
+	ORDER BY COUNT(customer_id) DESC
+	LIMIT 10)
+GROUP BY B.customer_id, first_name, last_name, city, country
+ORDER BY SUM(amount) DESC
+LIMIT 5 as average
