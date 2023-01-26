@@ -1,0 +1,64 @@
+#A process that lets us select the top 10 values by count in a data set
+SELECT D.country,
+       COUNT(customer_id)
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_ID = D.country_ID
+GROUP BY country
+ORDER BY COUNT(customer_id) DESC
+LIMIT 10
+
+#Now we find the top 10 cities in those 10 countries
+SELECT C.city,
+       COUNT(customer_id)
+FROM customer A
+INNER JOIN address B ON A.address_id = B.address_id
+INNER JOIN city C ON B.city_id = C.city_id
+INNER JOIN country D ON C.country_ID = D.country_ID
+WHERE country IN ('India',
+			'China',
+			'United States',
+			'Japan',
+			'Mexico',
+			'Brazil',
+			'Turkey',
+			'Philippines',
+			'Russian Federation',
+			'Indonesia')
+GROUP BY city
+ORDER BY COUNT(customer_id) DESC
+LIMIT 10
+
+#You could also do it like this, however, so the cities would update accordingly if the top countries were to change
+SELECT B.customer_id,
+	  first_name,
+   	  last_name,
+	  city,
+	  country,
+       	  SUM(amount)
+FROM payment A
+INNER JOIN customer B ON A.customer_id = B.customer_ID
+INNER JOIN address C ON B.address_id = C.address_id
+INNER JOIN city D ON C.city_id = D.city_id
+INNER JOIN country E ON D.country_ID = E.country_ID
+WHERE city IN
+	(SELECT C.city
+	FROM customer A
+	INNER JOIN address B ON A.address_id = B.address_id
+	INNER JOIN city C ON B.city_id = C.city_id
+	INNER JOIN country D ON C.country_ID = D.country_ID
+	WHERE country IN (SELECT D.country
+		FROM customer A
+		INNER JOIN address B ON A.address_id = B.address_id
+		INNER JOIN city C ON B.city_id = C.city_id
+		INNER JOIN country D ON C.country_ID = D.country_ID
+		GROUP BY country
+		ORDER BY COUNT(customer_id) DESC
+		LIMIT 10)
+	GROUP BY city
+	ORDER BY COUNT(customer_id) DESC
+	LIMIT 10)
+GROUP BY B.customer_id, first_name, last_name, city, country
+ORDER BY SUM(amount) DESC
+LIMIT 5
